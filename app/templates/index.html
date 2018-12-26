@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block styles %}
+    {{ super() }}
+    <style>
+        header { border-bottom: 1px solid #000; }
+        header > h2 { display: inline-block; }
+    </style>
+{% endblock %}
+
+{% block app_content %}
+    <a href="{{ url_for('main.create_event') }}"><button type='button' class='btn btn-success'>Make Event</button></a><br><br>
+    
+    {% if events_today %}
+    <header>
+        <h2>Today</h2>
+        <span><a href="{{ url_for('main.events_today') }}">(see on map)</a></span>
+    </header>
+    {% endif %}
+    {% for event in events_today %}
+        {% include '_event.html' %}
+    {% endfor %}
+
+    {% if events_this_week %}
+    <h2>This week</h2>
+    {% endif %}
+    {% for event in events_this_week %}
+        {% include '_event.html' %}
+    {% endfor %}
+
+    {% if events_later %}
+    <h2>Later</h2>
+    {% endif %}
+    {% for event in events_later %}
+        {% include '_event.html' %}
+    {% endfor %}
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block styles %}
+    {{ super() }}
+    <style>
+        #map { height: 400px; width:100%;}
+        .map-container { margin-top: 10px;}
+    </style>
+{% endblock %}
+
+{% block app_content %}
+    <h1>New location: {{ location.name }}</h1>
+    <p>Please confirm the exact location by clicking on the right spot to move the marker</p>
+    <div class='location-picker'>
+        <div class='map-container'>
+            <div id='map' data-type='map'></div>
+        </div><br>
+        <form action="" method="post" novalidate class="form-inline" id="playerform">
+        {{ form.csrf_token }}
+        {{ form.latitude(type="hidden",id="latitude") }}
+        {{ form.longitude(type="hidden",id="longitude") }}
+        {{ form.submit(class="btn btn-primary") }}
+        </form>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js'></script>
+    <script src='http://www.openlayers.org/api/OpenLayers.js'></script>
+    <script src='/static/location-picker.js'></script>
+
+    <script>
+    $(function(){
+            var locationPicker = $('.location-picker').locationPicker({
+                locationChanged : function(data){
+                    $('#result').text(JSON.stringify(data));
+                }
+            });
+    });
+    </script>
+{% endblock %}

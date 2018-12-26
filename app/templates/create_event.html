@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block app_content %}
+    <h1>Create Event</h1>
+    <div class="row">
+        <div class="col-md-4">
+            <form action="" method="post" novalidate class="form-inline" id="playerform">
+                {{ form.csrf_token }}
+                <div class="form-group">
+                    <p>
+                        {{ form.location.label }}
+                        {{ form.location(list="locations_list", class="form-control") }}
+                        {% for error in form.location.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                        {% endfor %}
+                    </p>
+                    <p>
+                        {{ form.date.label }}
+                        {{ form.date(class="form-control") }}
+                        {% for error in form.date.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                        {% endfor %}
+                    </p>
+                    <p>
+                        {{ form.time.label }}
+                        {{ form.time(class="form-control") }}
+                        {% for error in form.time.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                        {% endfor %}
+                    </p>
+                    <p>
+                        {{ form.info.label }}
+                        {{ form.info(class="form-control") }}
+                        {% for error in form.info.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                        {% endfor %}
+                    </p>
+                    {{ form.submit(class="btn btn-primary") }}
+                </div>
+            </form>
+        </div>
+    </div>
+    <datalist id="locations_list">
+        {% for l in locations %}
+        <option value='{{ l.name }}'>
+        {% endfor %}
+    </datalist>
+{% endblock %}

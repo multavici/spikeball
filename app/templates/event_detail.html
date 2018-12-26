@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block head %}
+    {{ super() }}
+    <meta id="coordinates" data-longitude='{{ event.location.longitude }}' data-latitude="{{ event.location.latitude }}">
+{% endblock %}
+
+{% block styles %}
+    {{ super() }}
+    <style>
+        #map { height: 400px; width:100%;}
+        .map-container { margin-top: 10px;}
+    </style>
+{% endblock %}
+
+{% block app_content %}
+    <h4>{{ event.datetime.strftime("%A %d %b") }}</h4>
+    <h1>{{ event.datetime.strftime("%H:%M") }} - {{ event.location.name }}</h1>
+    
+    <div class='map-container'>
+        <div id='map' data-type='map'></div>
+    </div><br>
+
+    Created by:
+    <a href="{{ url_for('main.user', username=event.creator.username) }}">
+        {{ event.creator.username }}
+    </a><br>
+
+    Particpants:
+    {% for participant in event.participants %}
+    <a href="{{ url_for('main.user', username=participant.username) }}">{{ participant.username }}</a>
+    {% if participant != event.participants[-1] %}, {% endif %}
+    {% endfor %}<br><br>
+
+    {% if event.info %}
+    Extra info:<br>
+    {{ event.info }}
+    {% endif %}
+
+    <div class="text-center">
+        {% if not current_user in event.participants %}
+        <a href="{{ url_for('main.join_event', event_id=event.id) }}"><button type='button' class="btn btn-primary">Join!</button></a>
+        {% else %}
+        <a href="{{ url_for('main.leave_event', event_id=event.id) }}"><button type='button' class="btn btn-default">Leave</button></a>
+        {% endif %}<br>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script src='http://www.openlayers.org/api/OpenLayers.js'></script>
+    <script>
+        var icon_url = 'https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678111-map-marker-128.png' //'/img/marker-icon.png'
+        var longitude = $('#coordinates').data("longitude");
+        var latitude = $('#coordinates').data("latitude");
+
+
+        map = new OpenLayers.Map("map");
+        map.addLayer(new OpenLayers.Layer.OSM());
+
+        var lonLat = new OpenLayers.LonLat( longitude, latitude )
+            .transform(
+                new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
+                map.getProjectionObject() // to Spherical Mercator Projection
+            );
+            
+        var zoom=13;
+        
+        var createMarkerIcon = function() {
+            var iconSize = new OpenLayers.Size(32, 32)
+            var iconOffset = new OpenLayers.Pixel(-(iconSize.w / 2), -iconSize.h)
+            var icon = new OpenLayers.Icon(icon_url, iconSize, iconOffset)
+
+            return icon
+        }
+
+        var markerIcon = createMarkerIcon()
+
+        var markers = new OpenLayers.Layer.Markers( "Markers" );
+        map.addLayer(markers);
+        
+        markers.addMarker(new OpenLayers.Marker(lonLat, markerIcon));
+        
+        map.setCenter (lonLat, zoom);
+    </script>
+{% endblock %}

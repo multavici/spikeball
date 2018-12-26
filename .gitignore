@@ -1,0 +1,33 @@
+# -*- mode: gitignore; -*-
+
+# ------------------------------------------------------------
+# Standard gitignore for Python projects
+# - Ignore standard Linux temp files
+# - Ignore Emacs temp files
+# - Ignore Python temp files & built stuff
+# ------------------------------------------------------------
+
+*~
+\#*\#
+.\#*
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# Distribution / packaging
+env/
+.env
+.flaskenv
+
+# Unit test / coverage reports
+
+# Virtualenvs
+venv/
+.venv*
+
+# Logging
+logs/
+
+# Migrations
+migrations/

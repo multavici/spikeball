@@ -1,0 +1,33 @@
+<table class="table table-hover" style="margin: 0px;">
+    <tr>
+        <td width="75px" style="vertical-align: middle;background-color:#F5F5F5;">
+            {{ event.datetime.strftime("%A %d %b") }}
+        </td>
+        <td width="450">
+            <h4>{{ event.datetime.strftime("%H:%M") }} - {{ event.location.name }}</h4>
+            Added by: <a href="{{ url_for('main.user', username=event.creator.username) }}">
+                {{ event.creator.username }}
+            </a><br>
+            Participants: 
+            {% for participant in event.participants %}
+            <a href="{{ url_for('main.user', username=participant.username) }}">{{ participant.username }}</a>
+            {% if participant != event.participants[-1] %}, {% endif %}
+            {% endfor %}<br>
+            <a href="{{ url_for('main.event_detail', event_id=event.id) }}">
+                details
+            </a>
+        </td>
+        <td style="vertical-align: middle;">
+            {% if not current_user in event.participants %}
+            <a href="{{ url_for('main.join_event', event_id=event.id) }}"><button type='button' class="btn btn-primary" style="width:65px">Join!</button></a>
+            {% else %}
+            <a href="{{ url_for('main.leave_event', event_id=event.id) }}"><button type='button' class="btn btn-default" style="width:65px">Leave</button></a>
+            {% endif %}
+            {% if event.creator == current_user %}
+            <a href="{{ url_for('main.delete_event', event_id=event.id) }}"><button type='button' class="btn btn-danger">
+                <img src="{{ url_for('static', filename='delete.png') }}" alt="delete icon" width="14" height="14">
+            </button></a>
+            {% endif %}
+        </td>
+    </tr>
+</table>
