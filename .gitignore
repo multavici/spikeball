@@ -7,13 +7,8 @@
 # - Ignore Python temp files & built stuff
 # ------------------------------------------------------------
 
-*~
-\#*\#
-.\#*
-
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
+.DS_Store
+*.pyc
 
 # Distribution / packaging
 env/
@@ -31,3 +26,6 @@ logs/
 
 # Migrations
 migrations/
+
+#db
+app.db
