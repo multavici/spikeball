@@ -27,9 +27,6 @@ logs/
 
 # Migrations
 migrations/
-<<<<<<< HEAD
 
 #db
 app.db
-=======
->>>>>>> 57eebd54f25eb4810ae098f9a03aa8d22493139f
