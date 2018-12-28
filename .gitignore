@@ -30,3 +30,6 @@ migrations/
 
 #db
 app.db
+
+# production server files
+wsgi.py
