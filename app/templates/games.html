@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+    <a href="{{ url_for('main.register_game') }}"><button type='button' class='btn btn-success'>Register game</button></a><br><br>
+    
+    {% if games %}
+    {% for game in games %}
+        {% include '_game.html' %}
+    {% endfor %}
+    {% endif %}
+{% endblock %}

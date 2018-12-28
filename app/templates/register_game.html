@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+    <h1>Register game</h1>
+    <div class="row">
+        <div class="col-md-4">
+            <form action="" method="post" novalidate class="form-inline">
+                {{ form.csrf_token }}
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-xs-3" style="height: 100%;"><span class="align-middle">Team 1</span></div>
+                        <div class="col-xs-4">
+                            {{ form.team1_player1(class="form-control") }}
+                            {% for error in form.team1_player1.errors %}
+                            <span style="color: red;">[{{ error }}]</span>
+                            {% endfor %}
+                        </div>
+                        <div class="col-xs-5">
+                            {{ form.team1_player2(class="form-control") }}
+                            {% for error in form.team1_player2.errors %}
+                            <span style="color: red;">[{{ error }}]</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-3">Team 2</div>
+                        <div class="col-xs-4">
+                            {{ form.team2_player1(class="form-control") }}
+                            {% for error in form.team2_player1.errors %}
+                            <span style="color: red;">[{{ error }}]</span>
+                            {% endfor %}
+                        </div>
+                        <div class="col-xs-5">
+                            {{ form.team2_player2(class="form-control") }}
+                            {% for error in form.team2_player2.errors %}
+                            <span style="color: red;">[{{ error }}]</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-xs-3"></div>
+                        <div class="col-xs-3">Set 1</div>
+                        <div class="col-xs-3">Set 2</div>
+                        <div class="col-xs-3">Set 3</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-3">Team 1</div>
+                        <div class="col-xs-3">{{ form.points_set1_team1(class="form-control input-sm", style="width: 50px;") }}</div>
+                        <div class="col-xs-3">{{ form.points_set2_team1(class="form-control input-sm", style="width: 50px;") }}</div>
+                        <div class="col-xs-3">{{ form.points_set3_team1(class="form-control input-sm", style="width: 50px;") }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-3">Team 2</div>
+                        <div class="col-xs-3">{{ form.points_set1_team2(class="form-control input-sm", style="width: 50px;") }}</div>
+                        <div class="col-xs-3">{{ form.points_set2_team2(class="form-control input-sm", style="width: 50px;") }}</div>
+                        <div class="col-xs-3">{{ form.points_set3_team2(class="form-control input-sm", style="width: 50px;") }}</div>
+                    </div>
+                    
+                    {{ form.submit(class="btn btn-primary") }}
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

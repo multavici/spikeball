@@ -1,0 +1,24 @@
+<table class="table table-hover" style="margin: 0px;">
+    <tr>
+        <td rowspan=2 width="125px" style="vertical-align: middle;background-color:#F5F5F5;">
+            <small>added by <a href="{{ url_for('main.user', username=game.creator.username) }}">{{ game.creator.username }}</a> on:<br>
+            {{ game.timestamp.strftime("%A %d %b %H:%M") }}</small>
+        </td>
+        <td width="450">
+            <a href="{{ url_for('main.user', username=game.team1.player1.username) }}">{{ game.team1.player1.username }}</a> & 
+            <a href="{{ url_for('main.user', username=game.team1.player2.username) }}">{{ game.team1.player2.username }}</a>
+        </td>
+        <td>{{ game.points_set1_team1 }}</td>
+        <td>{{ game.points_set2_team1 }}</td>
+        <td>{{ game.points_set3_team1 }}</td>
+    </tr>
+    <tr>
+        <td width="450">
+            <a href="{{ url_for('main.user', username=game.team2.player1.username) }}">{{ game.team2.player1.username }}</a> & 
+            <a href="{{ url_for('main.user', username=game.team2.player2.username) }}">{{ game.team2.player2.username }}</a>
+        </td>
+        <td>{{ game.points_set1_team2 }}</td>
+        <td>{{ game.points_set2_team2 }}</td>
+        <td>{{ game.points_set3_team2 }}</td>
+    </tr>
+</table>

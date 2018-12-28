@@ -2,8 +2,8 @@ from datetime import datetime, timedelta
 from flask import render_template, flash, redirect, url_for, request, current_app
 from flask_login import current_user, login_required
 from app import db
-from app.main.forms import EditProfileForm, PostForm, CreateEventForm, AddCoordinatesForm
-from app.models import User, Post, Event, Location
+from app.main.forms import EditProfileForm, PostForm, CreateEventForm, AddCoordinatesForm, RegisterGameForm
+from app.models import User, Post, Event, Location, Team, Game
 from app.main import bp
 
 @bp.before_app_request
@@ -152,3 +152,50 @@ def events_today():
         flash('No events today')
         return redirect(url_for('main.index'))
     return render_template('events_today.html', events_today=events_today)
+
+
+@bp.route('/register_game/', methods=['GET', 'POST'])
+@login_required
+def register_game():
+    form = RegisterGameForm()
+    choices = [(u.id, u.username) for u in User.query.order_by('username')]
+    form.team1_player1.choices = choices
+    form.team1_player2.choices = choices
+    form.team2_player1.choices = choices
+    form.team2_player2.choices = choices
+    if form.validate_on_submit():
+        team1 = Team.get_or_create(player1_id=form.team1_player1.data, player2_id=form.team1_player2.data)
+        team2 = Team.get_or_create(player1_id=form.team2_player1.data, player2_id=form.team2_player2.data)
+        game = Game(
+            user_id=current_user.id, team1_id=team1.id, team2_id=team2.id,
+            points_set1_team1=form.points_set1_team1.data,
+            points_set1_team2=form.points_set1_team2.data,
+            points_set2_team1=form.points_set2_team1.data,
+            points_set2_team2=form.points_set2_team2.data,
+            points_set3_team1=form.points_set2_team1.data,
+            points_set3_team2=form.points_set2_team2.data
+        )
+        db.session.add(game)
+        db.session.commit()
+        flash('The game has been registerd!')
+        return redirect(url_for('main.index'))
+    return render_template('register_game.html', form=form)
+
+@bp.route('/games/')
+@login_required
+def games():
+    games = Game.query.order_by('timestamp desc').all()
+    return render_template('games.html', games=games)
+
+
+@bp.route('/team/<teamname>')
+@login_required
+def team(teamname):
+    try:
+        team = Team.query.filter_by(name=teamname).one()
+    except:
+        players = teamname.split("&")
+        player1 = User.query.filter_by(username=players[0]).one()
+        player2 = User.query.filter_by(username=players[1]).one()
+        team = Team.query.filter_by(player1_id=player1.id, player2_id=player2.id).one()
+    return render_template('team_detail.html', team=team)

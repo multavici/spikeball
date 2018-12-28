@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, TextAreaField, TextField, DecimalField
+from wtforms import StringField, SubmitField, TextAreaField, TextField, DecimalField, SelectField, IntegerField
 from wtforms.fields.html5 import DateField
 from wtforms_components import TimeField
 from wtforms.validators import DataRequired, ValidationError, Length
@@ -35,4 +35,19 @@ class CreateEventForm(FlaskForm):
 class AddCoordinatesForm(FlaskForm):
     latitude = DecimalField('Latitude')
     longitude = DecimalField('Longitude')
+    submit = SubmitField('Submit')
+
+class RegisterGameForm(FlaskForm):
+    team1_player1 = SelectField('Player 1', coerce=int)
+    team1_player2 = SelectField('Player 2', coerce=int)
+    team2_player1 = SelectField('Player 1', coerce=int)
+    team2_player2 = SelectField('Player 2', coerce=int)
+
+    points_set1_team1 = IntegerField()
+    points_set1_team2 = IntegerField()
+    points_set2_team1 = IntegerField()
+    points_set2_team2 = IntegerField()
+    points_set3_team1 = IntegerField()
+    points_set3_team2 = IntegerField()
+
     submit = SubmitField('Submit')

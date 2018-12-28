@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+    <h1>{{ team.player1.username }} & {{ team.player2.username }}</h1>
+    {% if not team.name %}
+    <a href="{{ url_for('main.register_game') }}"><button type='button' class='btn btn-success'>Add teamname</button></a>
+    {% endif %}
+    
+    <h4>Ranking:</h4>
+
+    <h4>Games:</h4>
+    {% if team.games() %}
+    {% for game in team.games() %}
+        {% include '_game.html' %}
+    {% endfor %}
+    {% endif %}
+{% endblock %}

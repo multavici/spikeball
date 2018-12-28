@@ -19,8 +19,8 @@ class User(UserMixin, db.Model):
     about_me = db.Column(db.String(140))
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
 
-    posts = db.relationship('Post', backref='author', lazy='dynamic')
     events_created = db.relationship('Event', backref='creator', lazy='dynamic')
+    games_registered = db.relationship('Game', backref='creator', lazy='dynamic')
 
     def __repr__(self):
         return '<User: {}>'.format(self.username)
@@ -48,6 +48,9 @@ class User(UserMixin, db.Model):
         except:
             return
         return User.query.get(id)
+    
+    def teams(self):
+        return self.teams_as_player1 + self.teams_as_player2
        
 
 class Post(db.Model):
@@ -95,3 +98,76 @@ class Location(db.Model):
     def __repr__(self):
         return '<Location: {}>'.format(self.name)
 
+class Team(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(40))
+    player1_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    player2_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    player1 = db.relationship('User', foreign_keys=[player1_id], backref='teams_as_player1', lazy='subquery')
+    player2 = db.relationship('User', foreign_keys=[player2_id], backref='teams_as_player2', lazy='subquery')
+
+    def games(self):
+        return self.games_as_team1 + self.games_as_team2
+
+    @classmethod
+    def get_or_create(cls, player1_id, player2_id):
+        try:
+            return Team.query.filter_by(player1_id=player1_id, player2_id=player2_id).one()
+        except:
+            try:
+                return Team.query.filter_by(player1_id=player2_id, player2_id=player1_id).one()
+            except:
+                t = Team(player1_id=player1_id, player2_id=player2_id)
+                db.session.add(t)
+                db.session.commit()
+                return t
+
+
+class Game(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    team1_id = db.Column(db.Integer, db.ForeignKey('team.id'))
+    team2_id = db.Column(db.Integer, db.ForeignKey('team.id'))
+    team1_wins = db.Column(db.Boolean)
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+
+    points_set1_team1 = db.Column(db.Integer)
+    points_set1_team2 = db.Column(db.Integer)
+    points_set2_team1 = db.Column(db.Integer)
+    points_set2_team2 = db.Column(db.Integer)
+    points_set3_team1 = db.Column(db.Integer)
+    points_set3_team2 = db.Column(db.Integer)
+
+    team1 = db.relationship('Team', foreign_keys=[team1_id], backref='games_as_team1', lazy='subquery')
+    team2 = db.relationship('Team', foreign_keys=[team2_id], backref='games_as_team2', lazy='subquery')
+
+    def __init__(self, user_id, team1_id, team2_id, 
+            points_set1_team1, points_set1_team2, 
+            points_set2_team1, points_set2_team2, 
+            points_set3_team1, points_set3_team2):
+        self.user_id = user_id
+        self.team1_id = team1_id
+        self.team2_id = team2_id
+        self.points_set1_team1 = points_set1_team1
+        self.points_set1_team2 = points_set1_team2
+        self.points_set2_team1 = points_set2_team1
+        self.points_set2_team2 = points_set2_team2
+        self.points_set3_team1 = points_set3_team1
+        self.points_set3_team2 = points_set3_team2
+
+        sets_team1, sets_team2 = 0, 0
+        if points_set1_team1 > points_set1_team2:
+            sets_team1 += 1
+        else:
+            sets_team2 += 1
+        if points_set2_team1 > points_set2_team2:
+            sets_team1 += 1
+        else:
+            sets_team2 += 1
+        if points_set3_team1 > points_set3_team2:
+            sets_team1 += 1
+        else:
+            sets_team2 += 1
+
+        self.team1_wins = True if sets_team1 > sets_team2 else False
