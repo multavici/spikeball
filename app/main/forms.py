@@ -51,3 +51,29 @@ class RegisterGameForm(FlaskForm):
     points_set3_team2 = IntegerField()
 
     submit = SubmitField('Submit')
+
+    def validate(self):
+        if not FlaskForm.validate(self):
+            return False
+        result = True
+
+        # check if not the same player is chosen
+        users = [team1_player1.data,team1_player2.data,team2_player1.data,team2_player2.data]
+        picked = []
+        for user in users:
+            if user.data in picked:
+                user.errors.append('Please select distinct users')
+                result = False
+            else:
+                picked.append(team1_player2.data)
+
+        # check if first two sets are filled in
+        points = [points_set1_team1.data, points_set1_team2.data, points_set2_team1.data, points_set2_team2.data, points_set3_team1.data, points_set3_team2.data]
+        for point in points[:-2]:
+            if not point:
+                point.errors.append('The first two sets need to be filled in')
+                result = False
+        
+        # check if every set has a winner
+        for i, point in enumerate(points[::2]):
+            if point == poin
