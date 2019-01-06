@@ -10,6 +10,24 @@
 
 {% block styles %}
     {{ super() }}
+    <style>
+        .navbar {
+            margin-bottom: 0px;
+        }
+        .navbar div {
+            height: 64px;
+        }
+        .navbar-nav li a {
+            line-height: 64px;
+            height: 64px;
+            padding-top: 0;
+        }
+        .navbar-header li a {
+            float: left;
+            text-align: center;
+            width: 100%;
+        }
+    </style>
 {% endblock %}
 
 {% block navbar %}
@@ -40,6 +58,7 @@
             </div>
         </div>
     </nav>
+    {% block headerimage %}{% endblock %}
 {% endblock %}
 
 {% block content %}
