@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block styles %}
+    {{ super() }}
+    <style>
+        body,html {
+        height: 100%;
+        }
+
+        .wide {
+        width:100%;
+        height:450px;
+        background-image:url('/static/spikeball_sunset_beach_two_players.jpg');
+        background-size:cover;
+        background-position: center;
+        margin-bottom: 30px;
+        }
+        
+        .wide img {
+            width:100%;
+        }
+        
+        .navbar {
+            margin-bottom: 0px;
+        }
+        
+    </style>
+{% endblock %}
+
+{% block headerimage %}
+    <div class="wide"> 
+    </div>
+{% endblock %}
+
+{% block app_content %}
+    <h1>Welkom bij Spikeball Gent!</h1>
+    <h4>Spikeball Gent is de meest actieve groep van spikeball spelers in Gent. <a href="{{ url_for('auth.register') }}">Registreer</a> om alle spikeball sessies te zien.</h4>
+    <h2>Wat is Spikeball?</h2>
+    <p>Spikeball (of Roundnet, om precies te zijn), is sinds enkele jaren overgewaaid uit Amerika en is aan een enorme opmars bezig in België en Europa. 
+        Zeker in Gent is de sport bijzonder populair. In de zomermaanden zie je steeds vaker groepjes vrienden spiken in parken of op het strand van de 
+        Blaarmeersen. Om de donkere en koude wintermaanden te overbruggen, richtten we met enkele vrienden de eerste spikeballclub met vaste trainingsdag
+        in België op: Spikeball Gent was geboren. Elke dinsdag zijn alle niveaus welkom van 20u tot 22u in de sportzaal van de Wingerd in Gent.
+    </p>
+{% endblock %}

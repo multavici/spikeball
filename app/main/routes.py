@@ -12,7 +12,12 @@ def before_request():
         current_user.last_seen = datetime.utcnow()
         db.session.commit()
 
-@bp.route('/', methods=['GET', 'POST'])
+@bp.route('/')
+@bp.route('/home')
+def home():
+    next = request.args.get('next')
+    return render_template('home.html', title='Home Page', next=next)
+
 @bp.route('/index', methods=['GET', 'POST'])
 @login_required
 def index():
@@ -29,6 +34,7 @@ def user(username):
     user = User.query.filter_by(username=username).first_or_404()
     events = Event.query.filter_by(user_id=user.id).filter(Event.datetime >= datetime.today() - timedelta(days=1)).order_by(Event.datetime).all()
     return render_template('user.html', user=user, events=events)
+
 
 @bp.route('/edit_profile', methods=['GET', 'POST'])
 @login_required
