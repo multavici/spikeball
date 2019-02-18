@@ -30,7 +30,7 @@ logs/
 migrations/
 
 #db
-app.db
+*.db
 
 # production server files
 wsgi.py
