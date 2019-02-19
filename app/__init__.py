@@ -14,11 +14,8 @@ from flask_mail import Mail
 from flask_bootstrap import Bootstrap
 from flask_moment import Moment
 
-# app
+# config
 from config import Config
-
-app = Flask(__name__)
-app.config.from_object(Config)
 
 db = SQLAlchemy()
 migrate = Migrate()
@@ -91,7 +88,18 @@ def create_app(config_class=Config):
         app.logger.setLevel(logging.INFO)
         app.logger.info("Microblog startup")
 
+    @app.shell_context_processor
+    def make_shell_context():
+        context = {
+            "db":db,
+            "User":User,
+            "Event":Event,
+            "Location":Location,
+        }
+        return context
+
     return app
 
 
-from . import models
+# relative imports
+from .models import User, Event, Location
