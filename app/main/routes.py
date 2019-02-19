@@ -42,12 +42,19 @@ def index():
         .order_by(Event.datetime)
         .all()
     )
+    events_past = (
+        Event.query.filter(Event.datetime < today)
+        .order_by(Event.datetime.desc())
+        .limit(5)
+        .all()
+    )
     return render_template(
         "index.html",
         title="Home Page",
         events_today=events_today,
         events_this_week=events_this_week,
         events_later=events_later,
+        events_past=events_past,
     )
 
 

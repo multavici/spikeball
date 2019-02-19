@@ -1,0 +1,21 @@
+<table class="table table-hover" style="margin: 0px;">
+    <tr>
+        <td width="75px" style="vertical-align: middle;background-color:#F5F5F5;">
+            {{ event.datetime.strftime("%A %d %b") }}
+        </td>
+        <td width="450">
+            <h4>{{ event.datetime.strftime("%H:%M") }} - {{ event.location.name }}</h4>
+            Added by: <a href="{{ url_for('main.user', username=event.creator.username) }}">
+                {{ event.creator.username }}
+            </a><br>
+            Participants: 
+            {% for participant in event.participants %}
+            <a href="{{ url_for('main.user', username=participant.username) }}">{{ participant.username }}</a>
+            {% if participant != event.participants[-1] %}, {% endif %}
+            {% endfor %}<br>
+            <a href="{{ url_for('main.event_detail', event_id=event.id) }}">
+                details
+            </a>
+        </td>
+    </tr>
+</table>
