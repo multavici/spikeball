@@ -27,6 +27,19 @@ participants = db.Table(
     db.Column("event_id", db.Integer, db.ForeignKey("event.id")),
 )
 
+# connection between teams and players
+team_player = db.Table(
+    "team_player",
+    db.Column("team_id", db.Integer, db.ForeignKey("team.id")),
+    db.Column("player_id", db.Integer, db.ForeignKey("user.id")),
+)
+
+# connection between matches and teams
+match_team = db.Table(
+    "match_team",
+    db.Column("match_id", db.Integer, db.ForeignKey("match.id")),
+    db.Column("team_id", db.Integer, db.ForeignKey("team.id")),
+)
 
 ## Tables
 
@@ -39,7 +52,19 @@ class User(db.Model, UserMixin):
     about_me = db.Column(db.String(140))
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
 
+    # events created by user:
     events_created = db.relationship("Event", backref="creator", lazy="dynamic")
+
+    # teams this user is part of:
+    teams = db.relationship("Team", secondary=team_player, back_populates="players")
+
+    def __init__(self, username=None, email=None, password=None, about_me=None):
+        super(User, self).__init__(
+            username=username.lower(),
+            email=email.lower(),
+            password_hash=generate_password_hash(password),
+            about_me=about_me,
+        )
 
     def __repr__(self):
         return "<User: {}>".format(self.username)
@@ -66,12 +91,78 @@ class User(db.Model, UserMixin):
     @staticmethod
     def verify_reset_password_token(token):
         try:
-            id = jwt.decode(token, current_app.config["SECRET_KEY"], algoritms=["HS256"])[
-                "reset_password"
-            ]
+            id = jwt.decode(
+                token, current_app.config["SECRET_KEY"], algoritms=["HS256"]
+            )["reset_password"]
         except:
             return
         return User.query.get(id)
+
+
+class Team(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    teamname = db.Column(db.String(30))
+
+    # players in this team
+    # NOTE: this should be limited to two; this can be achieved in a custom __init__ function
+    players = db.relationship("User", secondary=team_player, back_populates="teams")
+
+    # matches played by this team
+    matches = db.relationship("Match", secondary=match_team, back_populates="teams")
+
+    def __init__(self, teamname=None, player1=None, player2=None):
+        if teamname is None:
+            raise ValueError("Cannot create team: no team name specified!")
+        if player1 is None and player2 is None:
+            raise ValueError("Cannot create team: no players specified!")
+        elif player1 is None:
+            raise ValueError("Cannot create team: player1 not specified!")
+        elif player2 is None:
+            raise ValueError("Cannot create team: player2 not specified!")
+        super(Team, self).__init__(
+            teamname=teamname.lower(), players=[player1, player2]
+        )
+
+    def __repr__(self):
+        return f"<Team {self.teamname}>"
+
+
+class Match(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    date = db.Column(db.DateTime)
+    score1 = db.Column(db.Integer)
+    score2 = db.Column(db.Integer)
+
+    # teams playing this match:
+    # NOTE: this should be limited to two; this can be achieved in a custom __init__ function
+    teams = db.relationship("Team", secondary=match_team, back_populates="matches")
+
+    @property
+    def team1(self):
+        return self.teams[0]
+
+    @property
+    def team2(self):
+        return self.teams[1]
+
+    def __init__(self, team1=None, team2=None, score1=None, score2=None, date=None):
+        if team1 is None and team2 is None:
+            raise ValueError("Cannot create team: no teams specified!")
+        elif team1 is None:
+            raise ValueError("Cannot create team: team1 not specified!")
+        elif team2 is None:
+            raise ValueError("Cannot create team: team2 not specified!")
+        if date is None:
+            date = datetime.utcnow()
+        if score1 is None or score2 is None:
+            raise ValueError("No valid score supplied for the match")
+        super(Match, self).__init__(
+            teams=[team1, team2], date=date, score1=int(score1), score2=int(score2)
+        )
+
+    def __repr__(self):
+        t1, t2 = self.teams
+        return f"<Match {t1.teamname} v {t2.teamname}>"
 
 
 # event table
@@ -109,6 +200,11 @@ class Location(db.Model):
     longitude = db.Column(db.Float)
 
     events = db.relationship("Event", backref="location", lazy=True)
+
+    def __init__(self, name=None, latitude=None, longitude=None):
+        super(Location, self).__init__(
+            name=name.lower(), latitude=latitude, longitude=longitude
+        )
 
     def __repr__(self):
         return "<Location: {}>".format(self.name)
