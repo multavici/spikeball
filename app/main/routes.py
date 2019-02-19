@@ -54,7 +54,7 @@ def index():
 @bp.route("/user/<username>")
 @login_required
 def user(username):
-    user = User.query.filter_by(username=username).first_or_404()
+    user = User.query.filter_by(username=username.lower()).first_or_404()
     events = (
         Event.query.filter_by(user_id=user.id)
         .filter(Event.datetime >= datetime.today() - timedelta(days=1))
@@ -69,7 +69,7 @@ def user(username):
 def edit_profile():
     form = EditProfileForm(current_user.username)
     if form.validate_on_submit():
-        current_user.username = form.username.data
+        current_user.username = form.username.data.lower()
         current_user.about_me = form.about_me.data
         db.session.commit()
         flash("Your changes have been saved")
