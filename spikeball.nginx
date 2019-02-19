@@ -1,0 +1,37 @@
+# spikeball nginx configuration with certbox enabled
+# copy this file to /etc/nginx/sites-available
+# make a static link from /etc/nginx/sites-available to /etc/nginx/sites-enabled
+# test if the nginx configuration is correct: sudo nginx -t
+# enable nginx: sudo systemctl enable nginx
+# restart nginx: sudo systemctl restart nginx
+
+server {
+    server_name spikeballgent.be www.spikeballgent.be;
+
+    location / {
+        include proxy_params;
+        proxy_pass http://unix:/home/spikeballgent/spikeball/spikeball.sock;
+    }
+
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/spikeballgent.be/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/spikeballgent.be/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+}
+
+server {
+    if ($host = www.spikeballgent.be) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    if ($host = spikeballgent.be) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    listen 80;
+    server_name spikeballgent.be www.spikeballgent.be;
+    return 404; # managed by Certbot
+}

@@ -1,0 +1,13 @@
+[Unit]
+Description=Gunicorn instance to serve myproject
+After=network.target
+
+[Service]
+User=spikeballgent
+Group=www-data
+WorkingDirectory=/home/spikeballgent/spikeball
+Environment="PATH=/home/spikeballgent/.anaconda/bin"
+ExecStart=/home/spikeballgent/.anaconda/bin/gunicorn --workers 3 --bind unix:spikeball.sock -m 007 app:create_app()
+
+[Install]
+WantedBy=multi-user.target

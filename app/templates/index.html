@@ -34,4 +34,12 @@
     {% for event in events_later %}
         {% include '_event.html' %}
     {% endfor %}
+
+    {% if events_past %}
+    <h2>Voorbij </h2>
+    {% endif %}
+    {% for event in events_past %}
+        {% include '_event_past.html' %}
+    {% endfor %}
+
 {% endblock %}
