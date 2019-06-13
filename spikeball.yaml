@@ -55,5 +55,5 @@ dependencies:
     - visitor==0.1.3
     - wtforms==2.2.1
     - wtforms-components==0.10.4
-prefix: /home/flaport/.anaconda/envs/spikeball
+prefix: /home/spikeball/.anaconda/envs/spikeball
 
