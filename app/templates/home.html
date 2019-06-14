@@ -9,21 +9,21 @@
 
         .wide {
             width:100%;
-            height: 600px;
-            background-image:url('/static/banner_tournament.png');
+            height:450px;
+            background-image:url('/static/tournament_register_banner.png');
             background-size:cover;
             background-position: center;
             margin-bottom: 30px;
         }
-        
+
         .wide img {
             width:100%;
         }
-        
+
         .navbar {
             margin-bottom: 0px;
         }
-        
+
         .video-container {
             position:relative;
             padding-bottom:56.25%;
@@ -45,14 +45,25 @@
 {% endblock %}
 
 {% block headerimage %}
-    <div class="wide"> 
-    </div>
+<a href="https://forms.gle/QYGyz5Jv3WcxF1yD7"><div class="wide">
+    </div></a>
 {% endblock %}
 
 {% block app_content %}
-    Click <a href="https://www.facebook.com/events/2245597268830163/">here</a> to join our summer tournament!
-    <h1>Welkom bij Spikeball Gent!</h1>
-    <h4>Spikeball Gent is de meest actieve groep van spikeball spelers in Gent. <a href="{{ url_for('auth.register') }}">Registreer</a> om alle spikeball sessies te zien.</h4>
+    <h1><span style="color:red">*New! </span>Roundnet Gent Summer Tournament!</h1>
+    <h4>
+    Welcome to the website of Roundnet Gent. If you came here to register for the tournament, click <a href="https://forms.gle/QYGyz5Jv3WcxF1yD7">here.</a><br>
+    Welkom op de website van Roundnet Gent. Om te registreren voor het toernooi, klik <a href="https://forms.gle/QYGyz5Jv3WcxF1yD7">hier.</a><br>
+    Dit evenement wordt ondersteund door de <a href="http://stad.gent/sport">sportdienst</a> van de stad gent.<br>
+    <a href="http://stad.gent/sport">
+    <img width="100" src="/static/logo_gent.png">
+    <img width="100" src="/static/sport.png">
+    </a>
+    </h4>
+
+
+    <h1>Welkom bij Roundnet Gent!</h1>
+    <p>Roundnet Gent is de meest actieve groep van roundnet (of spikeball) spelers in Gent. <a href="{{ url_for('auth.register') }}">Registreer</a> om alle pickup games te zien.</p>
     <p>Of volg ons op Facebook en Instagram:
         <a href="https://www.facebook.com/SpikeballGent/"><span style="font-size: 20px">
             <i class="fab fa-facebook-square"></i>
@@ -61,13 +72,13 @@
             <i class="fab fa-instagram"></i>
         </span></a>
     </p>
-    <h2>Wat is Spikeball?</h2>
-    <p>Spikeball (of Roundnet, om precies te zijn), is sinds enkele jaren overgewaaid uit Amerika en is aan een enorme opmars bezig in België en Europa. 
-        Zeker in Gent is de sport bijzonder populair. In de zomermaanden zie je steeds vaker groepjes vrienden spiken in parken of op het strand van de 
-        Blaarmeersen. Om de donkere en koude wintermaanden te overbruggen, richtten we met enkele vrienden de eerste spikeballclub met vaste trainingsdag
-        in België op: Spikeball Gent was geboren. Elke dinsdag zijn alle niveaus welkom van 20u tot 22u in de sportzaal van de Wingerd in Gent.
+    <h2>Wat is Roundnet?</h2>
+    <p>Roundnet (informeel ook wel Spikeball genoemd), is sinds enkele jaren overgewaaid uit Amerika en is aan een enorme opmars bezig in België en Europa.
+        Zeker in Gent is de sport bijzonder populair. In de zomermaanden zie je steeds vaker groepjes vrienden spiken in parken of op het strand van de
+        Blaarmeersen. Om de donkere en koude wintermaanden te overbruggen, richtten we met enkele vrienden de eerste roundnetclub met vaste trainingsdag
+        in België op: Roundnet Gent was geboren. Elke dinsdag zijn alle niveaus welkom van 20u tot 22u in de sportzaal van de Wingerd in Gent.
     </p>
-    <div class="video-container"> 
+    <div class="video-container">
         <iframe src="https://www.youtube.com/embed/l9UL6P5IsxY" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
     </div>
 {% endblock %}
