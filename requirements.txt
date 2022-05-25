@@ -27,7 +27,7 @@ Mako==1.0.7
 MarkupSafe==1.0
 pycosat==0.6.3
 pycparser==2.19
-PyJWT==1.6.4
+PyJWT==2.4.0
 pyOpenSSL==18.0.0
 PySocks==1.6.8
 python-dateutil==2.7.3
